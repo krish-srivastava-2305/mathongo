@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import { chapterController } from '../controllers/chapter.controllers.js';
-import { param, query }  from  "express-validator"
+import { body, param, query }  from  "express-validator"
 import reqValidator from '../middlewares/reqValidator.middleware.js';
+import adminMiddleware from '../middlewares/admin.middleware.js';
 
 const chaptersRouter = Router();
 
@@ -50,6 +51,29 @@ const filterValidation = [
     .toInt()
 ];
 
+const chapterCreationValidation = [
+    body("class")
+        .isString()
+        .trim()
+        .notEmpty()
+        .withMessage("Class is required and must be a non-empty string"),
+    body("chapter")
+        .isString()
+        .trim()
+        .notEmpty()
+        .withMessage("Chapter is required and must be a non-empty string"),
+    body("unit")
+        .isString()
+        .trim()
+        .notEmpty()
+        .withMessage("Unit is required and must be a non-empty string"),
+    body("subject")
+        .isString()
+        .trim()
+        .notEmpty()
+        .withMessage("Subject is required and must be a non-empty string")
+]
+
 chaptersRouter.get('/',
     filterValidation,
     reqValidator,
@@ -66,6 +90,13 @@ chaptersRouter.get("/:chapterId",
     ],
     reqValidator,
     chapterController.getChapter
+);
+
+chaptersRouter.post("/", 
+    adminMiddleware, 
+    chapterCreationValidation,
+    reqValidator,
+    chapterController.createChapter
 );
 
 export default chaptersRouter;

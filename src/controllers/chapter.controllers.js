@@ -70,10 +70,6 @@ const getAllChapters = async (req, res, next) => {
         
         const paginatedChapters = filteredChapters.slice(startIndex, endIndex);
         
-        // Remove this check - empty results are valid for pagination
-        // if (paginatedChapters.length === 0) {
-        //     throw new APIError("No chapters found for the given filters", 400);
-        // }
 
         // Add pagination metadata
         const pagination = {
@@ -84,8 +80,7 @@ const getAllChapters = async (req, res, next) => {
             hasNextPage: pageNum < totalPages,
             hasPrevPage: pageNum > 1
         };
-
-        // Return the filtered chapters with pagination metadata  
+ 
         res.status(200).json({
             message: "Chapters fetched successfully",
             status: 200,
@@ -98,14 +93,9 @@ const getAllChapters = async (req, res, next) => {
     }
 }
 
-const getChapter = async (req, res, next) => { // Fixed: Added next parameter
+const getChapter = async (req, res, next) => { 
     try {
         const chapterId = req.params.chapterId;
-
-        // Fixed: Check if chapterId exists before proceeding
-        if (!chapterId) {
-            throw new APIError("Chapter ID is required", 400);
-        }
 
         const chapterCache = await redis.get(`chapter:${chapterId}`);
 
@@ -119,7 +109,6 @@ const getChapter = async (req, res, next) => { // Fixed: Added next parameter
 
         const chapter = await Chapter.findById(chapterId);
 
-        // Fixed: Check if chapter exists after database query
         if (!chapter) {
             throw new APIError("No chapter found", 404);
         }
@@ -137,7 +126,39 @@ const getChapter = async (req, res, next) => { // Fixed: Added next parameter
     }
 }
 
+const createChapter = async (req, res, next) => {
+    try {
+        const { class: className, chapter, unit, subject } = req.body;
+
+        if (!req.user || req.user !== 'admin') {
+            throw new APIError("Unauthorized access", 403);
+        }
+
+        const newChapter = new Chapter({
+            class: className,
+            chapter,
+            unit,
+            subject
+        })
+
+        await newChapter.save();
+        
+        await redis.del('chapters');
+
+        res.status(201).json({
+            message: "Chapter created successfully",
+            status: 201,
+            data: newChapter
+        });
+
+    } catch (error) {
+        next(error);
+    }
+
+}
+
 export const chapterController = {
     getAllChapters,
-    getChapter
+    getChapter,
+    createChapter
 };
