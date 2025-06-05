@@ -2,11 +2,13 @@ import express, { urlencoded } from "express";
 import configureCors from "./configure/cors.configure.js";
 import dotenv from "dotenv";
 import errorHandler from "./middlewares/errorHandler.middleware.js";
+import rateLimiter from "./middlewares/rateLimiter.middleware.js";
 
 dotenv.config();
 const app = express();
 
 app.use(configureCors());
+app.use(rateLimiter)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
