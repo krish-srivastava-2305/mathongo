@@ -1,4 +1,4 @@
-import express, { urlencoded } from "express";
+import express from "express";
 import configureCors from "./configure/cors.configure.js";
 import dotenv from "dotenv";
 import errorHandler from "./middlewares/errorHandler.middleware.js";
@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 import chaptersRouter from "./routes/chapters.routes.js";
-app.use("/api/chapters", chaptersRouter);
+app.use("/api/v1/chapters", chaptersRouter);
 
 app.use((req, res) => {
     res.status(404).json({message: "Page not found", status: 404})

@@ -145,6 +145,17 @@ const createChapter = async (req, res, next) => {
         
         await redis.del('chapters');
 
+
+        /* 
+            Optionally, we can update the cache and prevent cache miss for users increasing UX
+            as this route will be used by admins to whom UX is not a priority. 
+        */
+
+        // const chapters = await Chapter.find({})
+        //     .sort({ class: 1, unit: 1, chapter: 1 })
+        //     .select("-__v -createdAt -updatedAt");
+        // await redis.set('chapters', JSON.stringify(chapters), 'EX', 60 * 60);
+
         res.status(201).json({
             message: "Chapter created successfully",
             status: 201,
