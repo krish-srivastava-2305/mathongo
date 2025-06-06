@@ -9,7 +9,7 @@ dotenv.config();
 const app = express();
 
 // Middleware configuration
-app.set("trust proxy", 1); // Trust the first proxy (Render's proxy)
+app.set("trust proxy", true); // Trust the first proxy (Render's proxy)
 app.use(configureCors()); // Configure CORS
 app.use(rateLimiter); // Apply rate limiting middleware
 app.use(express.json()); // Parse JSON bodies
