@@ -1,6 +1,9 @@
 import app from "./app.js";
 import connectDB from "./configure/db.configure.js";
 
+
+// Server initialization function
+// This function sets up the server, connects to the database, and starts listening for requests.
 const init = () => {
      try {
         console.log("Initializing server...");

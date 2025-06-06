@@ -6,6 +6,8 @@ import adminMiddleware from '../middlewares/admin.middleware.js';
 
 const chaptersRouter = Router();
 
+
+// Validation rules for filtering chapters
 const filterValidation = [
   query('class')
     .optional()
@@ -51,6 +53,7 @@ const filterValidation = [
     .toInt()
 ];
 
+// Validation rules for chapter creation
 const chapterCreationValidation = [
     body("class")
         .isString()
@@ -74,12 +77,15 @@ const chapterCreationValidation = [
         .withMessage("Subject is required and must be a non-empty string")
 ]
 
+// Route definitions
+// GET /api/v1/chapters - Get all chapters with optional filtering
 chaptersRouter.get('/',
     filterValidation,
     reqValidator,
     chapterController.getAllChapters
 );
 
+// GET /api/v1/chapters/:chapterId - Get a specific chapter by ID
 chaptersRouter.get("/:chapterId",
     [
         param("chapterId")
@@ -92,6 +98,8 @@ chaptersRouter.get("/:chapterId",
     chapterController.getChapter
 );
 
+// POST /api/v1/chapters - Create a new chapter (admin only)
+// This route is protected by adminMiddleware to ensure only admins can create chapters
 chaptersRouter.post("/", 
     adminMiddleware, 
     chapterCreationValidation,

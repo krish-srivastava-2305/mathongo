@@ -1,6 +1,8 @@
 import APIError from "../configure/error.configure.js";
 
-const errorHandler = (err, req, res, next) => {
+// Error handling middleware
+// This middleware catches errors thrown in the application and formats them into a consistent JSON response.
+const errorHandler = (err, req, res) => {
     console.error(err.stack)
     if (err instanceof APIError) {
         return res.status(err.statusCode).json(err.toJson());

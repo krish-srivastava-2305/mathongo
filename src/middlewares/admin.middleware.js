@@ -1,5 +1,7 @@
+
+// Simulating an admin user for demonstration purposes
 const adminMiddleware = (req, res, next) => {
-    req.user = "admin" // Simulating an admin user for demonstration purposes
+    req.user = "admin"
     next();
 }
 

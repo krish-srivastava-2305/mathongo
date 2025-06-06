@@ -1,5 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 
+
+// Chapter Schema as per the mock data provided
 const chapterSchema = new Schema({
     subject: {
     type: String,
